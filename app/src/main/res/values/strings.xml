@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Andrew Samir Revival Task</string>
+    <string name="title_activity_maps">"Andrew Revival "</string>
+    <string name="internet_problem">No Internet Connection Please Try Later</string>
+</resources>

@@ -13,6 +13,8 @@ public class Results {
     private String id;
     @SerializedName("name")
     private String name;
+    @SerializedName("photos")
+    private List<Photos> photos;
     @SerializedName("place_id")
     private String place_id;
     @SerializedName("reference")
@@ -21,6 +23,8 @@ public class Results {
     private String scope;
     @SerializedName("types")
     private List<String> types;
+    @SerializedName("vicinity")
+    private String vicinity;
 
     public Geometry getGeometry() {
         return geometry;
@@ -54,6 +58,14 @@ public class Results {
         this.name = name;
     }
 
+    public List<Photos> getPhotos() {
+        return photos;
+    }
+
+    public void setPhotos(List<Photos> photos) {
+        this.photos = photos;
+    }
+
     public String getPlace_id() {
         return place_id;
     }
@@ -84,5 +96,13 @@ public class Results {
 
     public void setTypes(List<String> types) {
         this.types = types;
+    }
+
+    public String getVicinity() {
+        return vicinity;
+    }
+
+    public void setVicinity(String vicinity) {
+        this.vicinity = vicinity;
     }
 }

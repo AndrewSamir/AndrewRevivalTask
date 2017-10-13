@@ -19,6 +19,9 @@ public class Constant {
     //online version
     public static String baseUrl = "https://maps.googleapis.com/";
 
+
+    public static String googleAPIKey = "AIzaSyC2-JH7QqoaikPj8KWV1x4vMzoDrqPFFT0";
+
     public String apiValue = "";
     public String apiKey = "";
     public String Authorization = "";

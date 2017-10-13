@@ -16,11 +16,4 @@ public interface ApiCall {
             @Query("location") String location,
             @Query("radius") String radius,
             @Query("key") String key);
-
-    /*@GET(Constant.subUrl + "maps/api/place/photo?")
-    Call<String> getGooglePlacesPhotoCall(
-            @Query("maxwidth") String maxwidth,
-            @Query("photoreference") String photoreference,
-            @Query("sensor") String sensor,
-            @Query("key") String key);*/
 }

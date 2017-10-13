@@ -17,18 +17,13 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-// start comment
-// end comment
-
-// import okhttp3.logging.HttpLoggingInterceptor;
-
 public class RestVKader {
 
     private static RestVKader instance;
     private static ApiCall apiService;
-    //public final String BASE_URL = "http://192.168.1.222/";
+    //public final String BASE_URL = "";
     private static Context mcontext;
-    // public String apiValue = "9c4a06e4dddceb70722de4f3fda4f2c7";
+    // public String apiValue = "";
     public String apiKey = "ApiKey";
     public String Authorization = "Authorization";
 
@@ -42,13 +37,14 @@ public class RestVKader {
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder().readTimeout(6, TimeUnit.MINUTES)
                 .connectTimeout(1, TimeUnit.MINUTES);
-//coment start
+
+// comment start to create signed apk
 
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
         builder.addInterceptor(interceptor);
 
-//comment end
+// comment end
         //  httpClient.addInterceptor(interceptor).build();
 
 
@@ -58,68 +54,11 @@ public class RestVKader {
 
                 Request request = chain.request();
                 Request newRequest;
-              //  String apiValue = Constant.getInstance(mcontext).apiValue;
-                //String token = SharedPrefUtil.getInstance(mcontext).read(DataEnum.shAuthToken.name(), "");
-
-                //  String firebasetoken = "";
-
-            //    String firebasetoken = SharedPrefUtil.getInstance(mcontext).read(DataEnum.shFirebaseToken.name(), "");
-              //  Log.e("log", token + "==" + firebasetoken);
-
-             /*   if (SharedPrefUtil.getInstance(mcontext).read(DataEnum.shIsFirebaseCall.name(), false)) {
-                    SharedPrefUtil.getInstance(mcontext).write(DataEnum.shIsFirebaseCall.name(), false);
-                    newRequest = request.newBuilder()
-
-                            .header("Content-Type", "application/json")
-                            .method(request.method(), request.body())
-                            .build();
-                    return chain.proceed(newRequest);
-                } else if (!token.isEmpty() && !firebasetoken.isEmpty()) {
-                    newRequest = request.newBuilder()
-
-
-                            .header(apiKey, apiValue)
-
-                            .header("Authorization", token)
-                            .header("device", firebasetoken)
-                            .header("version", getVestionCode(mcontext))
-                            .method(request.method(), request.body())
-                            .build();
-                    return chain.proceed(newRequest);
-                } else if (!token.isEmpty()) {
-                    newRequest = request.newBuilder()
-                            .header(apiKey, apiValue)
-
-                            .header("Authorization", token)
-                            // .header("device", SharedPrefUtil.getInstance(mcontext).read("firebasetoken", ""))
-                            .header("version", getVestionCode(mcontext))
-                            .method(request.method(), request.body())
-                            .build();
-                    return chain.proceed(newRequest);
-                } else if (!firebasetoken.isEmpty()) {
-                    newRequest = request.newBuilder()
-                            .header(apiKey, apiValue)
-                            //.header("Authorization", SharedPrefUtil.getInstance(mcontext).read("auth_token", ""))
-                            .header("device", firebasetoken)
-
-                            .header("version", getVestionCode(mcontext))
-                            .method(request.method(), request.body())
-                            .build();
-                    return chain.proceed(newRequest);
-                } else {*/
-                    newRequest = request.newBuilder()
-
-
-                           // .header(apiKey, apiValue)
-
-                            // .header("Authorization", SharedPrefUtil.getInstance(mcontext).read("auth_token", ""))
-                            //.header("device", SharedPrefUtil.getInstance(mcontext).read("firebasetoken", ""))
-                           // .header("version", getVestionCode(mcontext))
-                            .method(request.method(), request.body())
-                            .build();
-                    return chain.proceed(newRequest);
-               // }
-
+                newRequest = request.newBuilder()
+                        //can add header here
+                        .method(request.method(), request.body())
+                        .build();
+                return chain.proceed(newRequest);
             }
         });
 
@@ -141,14 +80,10 @@ public class RestVKader {
         return instance;
     }
 
-    public static String getVestionCode(Context c) {
-        /*
-        p40sdmkkmgjb1ggyadqz
-        e4bbe5b7a4c1eb55652965aee885dd59bd2ee7f4
-         */
+    // get current version code to ask him to update the application if there is new update
+    public static String getVersionCode(Context c) {
         String v = "";
         try {
-
             v += c.getPackageManager()
                     .getPackageInfo(c.getPackageName(), 0).versionName;
             // SharedPrefUtil.getInstance(mcontext).write(DataEnum.shversionName.name(), v);
@@ -157,11 +92,9 @@ public class RestVKader {
         }
         // Log.e("log",v);
         return v;
-
     }
 
     public ApiCall getClientService() {
-
         return apiService;
     }
 }

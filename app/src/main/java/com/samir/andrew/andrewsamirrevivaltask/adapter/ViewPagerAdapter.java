@@ -3,7 +3,6 @@ package com.samir.andrew.andrewsamirrevivaltask.adapter;
 import android.content.Context;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,22 +25,15 @@ public class ViewPagerAdapter extends PagerAdapter implements View.OnClickListen
     private Context context;
     private ArrayList<Results> intro;
 
-    // private CircleImageView ivPager;
     private ViewPager viepager;
     private TextView tvViewPagerName;
+    private TextView tvViewPagerPlaceId;
     private ImageView imgViewPagerName;
-    //private TextView tvPrice, tvSpecial;
-    //  private TextView tvLoader;
-    // private boolean isFeatured;
-    // private String strPrice;
 
     public ViewPagerAdapter(Context context, ArrayList<Results> intro, ViewPager viepager) {
         this.context = context;
         this.intro = intro;
         this.viepager = viepager;
-        //  this.isFeatured = isFutuered;
-        //   this.strPrice = strPrice;
-        //   Log.e("price",strPrice+"iii");
     }
 
     @Override
@@ -63,16 +55,20 @@ public class ViewPagerAdapter extends PagerAdapter implements View.OnClickListen
 
         tvViewPagerName = (TextView) inner.findViewById(R.id.tvViewPagerName);
         imgViewPagerName = (ImageView) inner.findViewById(R.id.imgViewPagerName);
+        tvViewPagerPlaceId = (TextView) inner.findViewById(R.id.tvViewPagerPlaceID);
 
         tvViewPagerName.setText(intro.get(position).getName());
 
-          String imageUri = Constant.baseUrl + "maps/api/place/photo?photoreference=" + intro.get(position).getGeometry(). +
-                "&sensor=false&key=" + "AIzaSyC2-JH7QqoaikPj8KWV1x4vMzoDrqPFFT0";
+        tvViewPagerPlaceId.setText(context.getString(R.string.place_id) + intro.get(position).getPlace_id());
+        String imageUri = "no image";
 
-        String imageUri = "https://pbs.twimg.com/profile_images/378800000608859108/90a9d97e7bda84df9b7145d15b24c91b_400x400.jpeg";
-        Log.d("image", imageUri);
-
-        //  Picasso.with(context).load(imageUri).into(imgViewPagerName);
+        // get image uri
+        // using try and catch because not all places have photo param
+        try {
+            imageUri = Constant.baseUrl + "maps/api/place/photo?maxwidth=400&photoreference=" + intro.get(position).getPhotos().get(0).getPhoto_reference() + "&sensor=false&key=" + Constant.googleAPIKey;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         Picasso.with(context)
                 .load(imageUri)

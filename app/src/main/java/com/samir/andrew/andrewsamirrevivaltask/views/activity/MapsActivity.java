@@ -1,4 +1,4 @@
-package com.samir.andrew.andrewsamirrevivaltask;
+package com.samir.andrew.andrewsamirrevivaltask.views.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -9,7 +9,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -25,16 +24,16 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.samir.andrew.andrewsamirrevivaltask.R;
 import com.samir.andrew.andrewsamirrevivaltask.adapter.ViewPagerAdapter;
 import com.samir.andrew.andrewsamirrevivaltask.googlePlacesApis.ModelGooglePlacesApis;
 import com.samir.andrew.andrewsamirrevivaltask.googlePlacesApis.Results;
 import com.samir.andrew.andrewsamirrevivaltask.interfaces.HandleRetrofitResp;
 import com.samir.andrew.andrewsamirrevivaltask.retorfitconfig.HandleCalls;
-import com.sdsmdg.tastytoast.TastyToast;
+import com.samir.andrew.andrewsamirrevivaltask.utilities.DataEnum;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -58,7 +57,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
         ButterKnife.bind(this);
         initCurrentLocation();
 
@@ -77,32 +76,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED))
                     .title(result.getName()));
 
-            //    .icon(icon));
-            //  marker.setTag(data.getUuid());
             marker.setTag(result);
             marker.setSnippet(result.getId());
-
             markers.add(marker);
         }
 
         mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
             @Override
             public boolean onMarkerClick(Marker marker) {
-
                 for (Marker m : markers) {
-
                     if (m.getSnippet().equals(marker.getSnippet())) {
                         m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
                         vpContent.setCurrentItem(markers.indexOf(m));
                     } else
                         m.setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-
-
                 }
-
-                Results data = (Results) marker.getTag();
-
-                //  TastyToast.makeText(MapsActivity.this, data.getName(), TastyToast.LENGTH_SHORT, TastyToast.SUCCESS);
                 return true;
             }
         });
@@ -127,8 +115,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void initCurrentLocation() {
-        // needed to get the map to display immediately
-
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -164,7 +150,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void initLoc() {
 
-
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -177,23 +162,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
         mCurrentLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         HandleCalls.getInstance(this).setonRespnseSucess(this);
-        HandleCalls.getInstance(this).callGetGooglePlaces("test", mCurrentLocation.getLatitude() + "," + mCurrentLocation.getLongitude(), "60");
+        HandleCalls.getInstance(this).callGetGooglePlaces(DataEnum.getPlacesFlag.name(), mCurrentLocation.getLatitude() + "," + mCurrentLocation.getLongitude(), "100");
 
-
-        // animateMarker(latlang,true);
     }
 
     @Override
     public void onResponseSuccess(String flag, Object o) {
 
-        modelGooglePlacesApis = (ModelGooglePlacesApis) o;
-        Log.d("statusTest", "here");
-        Log.d("statusTest", modelGooglePlacesApis.getStatus());
-
-
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        mapFragment.getMapAsync(this);
+        if (flag.equals(DataEnum.getPlacesFlag.name())) {
+            modelGooglePlacesApis = (ModelGooglePlacesApis) o;
+            //  Log.d("statusTest", modelGooglePlacesApis.getStatus());
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map);
+            mapFragment.getMapAsync(this);
+        }
     }
 
     @Override
@@ -217,7 +199,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         vpContent.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
             }
 
             @Override
@@ -227,8 +208,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         markers.get(i).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW));
                     } else
                         markers.get(i).setIcon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED));
-
-
                 }
             }
 
